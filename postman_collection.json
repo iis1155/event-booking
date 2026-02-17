@@ -1,0 +1,401 @@
+{
+  "info": {
+    "name": "Event Booking System API",
+    "_postman_id": "event-booking-api-v1",
+    "description": "Complete API collection for Event Booking System built with Laravel 11 + Sanctum",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@test.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data.access_token) {",
+                  "  pm.collectionVariables.set('token', res.data.access_token);",
+                  "  console.log('Token saved:', res.data.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@eventbooking.test\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (Organizer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data.access_token) {",
+                  "  pm.collectionVariables.set('token', res.data.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"organizer1@eventbooking.test\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (Customer)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data.access_token) {",
+                  "  pm.collectionVariables.set('token', res.data.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer1@eventbooking.test\",\n  \"password\": \"password\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/auth/logout", "host": ["{{base_url}}"], "path": ["auth", "logout"] }
+          }
+        },
+        {
+          "name": "Get Current User (me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/me", "host": ["{{base_url}}"], "path": ["me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📅 Events",
+      "item": [
+        {
+          "name": "Get All Events",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/events?page=1&per_page=10",
+              "host": ["{{base_url}}"],
+              "path": ["events"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "per_page", "value": "10" },
+                { "key": "search", "value": "", "disabled": true },
+                { "key": "location", "value": "", "disabled": true },
+                { "key": "date_from", "value": "", "disabled": true },
+                { "key": "date_to", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Events (Search)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/events?search=Jakarta",
+              "host": ["{{base_url}}"],
+              "path": ["events"],
+              "query": [{ "key": "search", "value": "Jakarta" }]
+            }
+          }
+        },
+        {
+          "name": "Get All Events (Filter by Location)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/events?location=Bali",
+              "host": ["{{base_url}}"],
+              "path": ["events"],
+              "query": [{ "key": "location", "value": "Bali" }]
+            }
+          }
+        },
+        {
+          "name": "Get All Events (Filter by Date)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/events?date_from=2026-01-01&date_to=2026-12-31",
+              "host": ["{{base_url}}"],
+              "path": ["events"],
+              "query": [
+                { "key": "date_from", "value": "2026-01-01" },
+                { "key": "date_to", "value": "2026-12-31" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Event",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/events/1", "host": ["{{base_url}}"], "path": ["events", "1"] }
+          }
+        },
+        {
+          "name": "Create Event (Organizer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/events", "host": ["{{base_url}}"], "path": ["events"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"New Tech Event 2026\",\n  \"description\": \"An exciting tech event\",\n  \"date\": \"2026-08-01 09:00:00\",\n  \"location\": \"Jakarta Convention Center\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Event (Organizer)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/events/1", "host": ["{{base_url}}"], "path": ["events", "1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Event Title\",\n  \"location\": \"Bali International Convention Centre\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Event (Organizer)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/events/1", "host": ["{{base_url}}"], "path": ["events", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🎫 Tickets",
+      "item": [
+        {
+          "name": "Create Ticket (Organizer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/events/1/tickets", "host": ["{{base_url}}"], "path": ["events", "1", "tickets"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"VIP\",\n  \"price\": 750000,\n  \"quantity\": 100\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Ticket (Organizer)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/tickets/1", "host": ["{{base_url}}"], "path": ["tickets", "1"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 800000,\n  \"quantity\": 150\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Ticket (Organizer)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/tickets/1", "host": ["{{base_url}}"], "path": ["tickets", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📋 Bookings",
+      "item": [
+        {
+          "name": "Create Booking (Customer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/tickets/2/bookings", "host": ["{{base_url}}"], "path": ["tickets", "2", "bookings"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Bookings (Customer)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/bookings", "host": ["{{base_url}}"], "path": ["bookings"] }
+          }
+        },
+        {
+          "name": "Cancel Booking (Customer)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/bookings/1/cancel", "host": ["{{base_url}}"], "path": ["bookings", "1", "cancel"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Change of plans\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get All Bookings (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/admin/bookings", "host": ["{{base_url}}"], "path": ["admin", "bookings"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "💳 Payments",
+      "item": [
+        {
+          "name": "Process Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/bookings/1/payment", "host": ["{{base_url}}"], "path": ["bookings", "1", "payment"] }
+          }
+        },
+        {
+          "name": "Get Payment Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{base_url}}/payments/1", "host": ["{{base_url}}"], "path": ["payments", "1"] }
+          }
+        }
+      ]
+    }
+  ]
+}
