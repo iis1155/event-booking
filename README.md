@@ -22,7 +22,7 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Update `.env`:
+Update `.env` adjust to your local username and password:
 ```env
 APP_NAME="Event Booking System"
 APP_URL=http://localhost:8000
